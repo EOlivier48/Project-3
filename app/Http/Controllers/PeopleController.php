@@ -48,7 +48,7 @@ class PeopleController extends Controller
       if($validator->passes())
       {
         People::create([
-          'first_name' => isset($data['first_name']),
+          'first_name' => $data['first_name'],
           'last_name' => $data['last_name'],
           'favorite_food' => $data['favorite_food']
         ]);
