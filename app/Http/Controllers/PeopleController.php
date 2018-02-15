@@ -37,7 +37,15 @@ class PeopleController extends Controller
     public function store(Request $request)
     {
       $data = $request->json()->all();
-      if ((array_key_exists('first_name',$data) && isset($data['first_name'])) && (array_key_exists('last_name',$data) && isset($data['last_name'])) && (array_key_exists('favorite_food',$data) && isset($data['favorite_food'])))
+      $rules = [
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'favorite_food' => 'required'
+      ];
+
+      $validator = \Validator::make($data,$rules);
+
+      if($validator->passes())
       {
         People::create([
           'first_name' => isset($data['first_name']),
