@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function() {
 
   $(function() {
     $.ajaxSetup({
@@ -11,13 +11,14 @@ $(document).ready(function(){
   RefreshPeople();
   LoadStates();
 
-  $('#peopleList').click(function(e){
+  $('#peopleList').click(function(e) {
     //this should grab the selected person, and load their data into the other objects
     var list = document.getElementById('peopleList').childNodes;
     var testTarget = e.target.getAttribute("class");
 
     //if the name just clicked on is not the active name then show all the data
-    if(testTarget.search("active") == -1) {
+    if(testTarget.search("active") == -1)
+    {
       var tempId = e.target.id.split("_");
       //load up the Details
       GetPersonDetails(tempId[1]);
@@ -28,7 +29,8 @@ $(document).ready(function(){
 
       $('#detailsCollapse').collapse('show');
     }
-    else {
+    else
+    {
       //hide the card that shows all the data
       $('#detailsCollapse').collapse('hide');
       e.target.setAttribute("class","list-group-item list-group-item-action list-group-item-info");
@@ -36,61 +38,73 @@ $(document).ready(function(){
 
   });
 
-  $('#createNewVisit').click(function(e){
+  $('#createNewVisit').click(function(e) {
     var es = document.getElementById('visitModalState');
     var ep = document.getElementById('visitModalPerson');
     var ed = document.getElementById('visitModalDate');
 
-    var xhrData = {'state_id': es.options[es.selectedIndex].value,
-                'person_id': ep.options[ep.selectedIndex].value,
-                'date_visited': ed.value};
-    console.log(xhrData);
-    $.ajax({
-      type: "POST",
-      url: "/api/visits",
-      data: JSON.stringify(xhrData),
-      success: function(result)
-      {
-        var list = document.getElementsByClassName("list-group-item list-group-item-action list-group-item-info active");
-        //console.log(list[0].id);
-        if(list !== 'undefined' && list.length > 0) {
-          listIdArr = list[0].id.split("_");
-          GetPersonVisits(listIdArr[1]);
-        }
-        $('#newVisitModal').modal('hide');
-        //console.log(xhrData);
-      },
-      error: function (xhr, ajaxOptions, thrownError)
-      {
-        console.log(xhr.status + " | " + thrownError + " | " + JSON.stringify(xhr));
-      }
-    });
+    if (es.options[es.selectedIndex].value != "" && ep.options[ep.selectedIndex].value != "" && ed.value != "")
+    {
+      var xhrData = {'state_id': es.options[es.selectedIndex].value,
+                  'person_id': ep.options[ep.selectedIndex].value,
+                  'date_visited': ed.value};
 
+      $.ajax({
+        type: "POST",
+        url: "/api/visits",
+        data: JSON.stringify(xhrData),
+        success: function(result)
+        {
+          var list = document.getElementsByClassName("list-group-item list-group-item-action list-group-item-info active");
+          //console.log(list[0].id);
+          if(list !== 'undefined' && list.length > 0) {
+            listIdArr = list[0].id.split("_");
+            GetPersonVisits(listIdArr[1]);
+          }
+          $('#newVisitModal').modal('hide');
+          //console.log(xhrData);
+        },
+        error: function (xhr, ajaxOptions, thrownError)
+        {
+          console.log(xhr.status + " | " + thrownError + " | " + JSON.stringify(xhr));
+        }
+      });
+    }
+    else
+    {
+      alert("Error: all fields are required.");
+    }
   });
 
-  $('#createNewPerson').click(function(e){
+  $('#createNewPerson').click(function(e) {
     var efn = document.getElementById('personModalFN');
     var eln = document.getElementById('personModalLN');
     var eff = document.getElementById('personModalFF');
 
-    var xhrData = {'first_name': efn.value,
-                'last_name': eln.value,
-                'favorite_food': eff.value};
-    $.ajax({
-      type: "POST",
-      url: "/api/people",
-      data: JSON.stringify(xhrData),
-      success: function(result)
-      {
-        RefreshPeople();
-        $('#newPersonModal').modal('hide');
-      },
-      error: function (xhr, ajaxOptions, thrownError)
-      {
-        console.log(xhr.status + " | " + thrownError + " | " + JSON.stringify(xhr));
-      }
-    });
-
+    if (efn.value != "" && eln.value != "" && eff.value != "")
+    {
+      var xhrData = {'first_name': efn.value,
+                  'last_name': eln.value,
+                  'favorite_food': eff.value};
+      $.ajax({
+        type: "POST",
+        url: "/api/people",
+        data: JSON.stringify(xhrData),
+        success: function(result)
+        {
+          RefreshPeople();
+          $('#newPersonModal').modal('hide');
+        },
+        error: function (xhr, ajaxOptions, thrownError)
+        {
+          console.log(xhr.status + " | " + thrownError);
+        }
+      });
+    }
+    else
+    {
+      alert("Error: all fields are required.");
+    }
   });
 
   $('#newVisitModal').on('hidden.bs.modal', function () {
@@ -101,7 +115,8 @@ $(document).ready(function(){
     $(this).find("input,textarea,select").val('').end();
   });
 
-  function RefreshPeople() {
+  function RefreshPeople()
+  {
     //make ajax call to get list of people
     $.ajax({
       type: "GET",
@@ -112,7 +127,8 @@ $(document).ready(function(){
         var list = JSON.parse(result);
         var htmlString1 = '';
         var htmlString2 = "<option selected>Select A Person</option>";
-        for (var i = 0; i < list.people.length; i++) {
+        for (var i = 0; i < list.people.length; i++)
+        {
           htmlString1 += "<a href=#  class='list-group-item list-group-item-action list-group-item-info' id=listItem_" + list.people[i]['id'] + ">" + list.people[i]['first_name'] + " " + list.people[i]['last_name'] + "</a>";
           htmlString2 += "<option value=" + list.people[i]['id'] + ">" + list.people[i]['first_name'] + " " + list.people[i]['last_name'] + "</option>";
         }
@@ -124,7 +140,8 @@ $(document).ready(function(){
 
   }
 
-  function GetPersonDetails(id) {
+  function GetPersonDetails(id)
+  {
     $.ajax({
       type: "GET",
       url: "/api/people/" + id,
@@ -140,7 +157,8 @@ $(document).ready(function(){
     });
   }
 
-  function GetPersonVisits(id) {
+  function GetPersonVisits(id)
+  {
 
     $.ajax({
       type: "GET",
@@ -164,10 +182,13 @@ $(document).ready(function(){
                             + "</thead>"
                             + "<tbody>";
 
-            for (var i = 0; i < list.visits.length; i++) {
+            for (var i = 0; i < list.visits.length; i++)
+            {
               var state;
-              for(var j = 0; j < stateTable.states.length; j++) {
-                if (list.visits[i]['state_id'] == stateTable.states[j]['id']) {
+              for(var j = 0; j < stateTable.states.length; j++)
+              {
+                if (list.visits[i]['state_id'] == stateTable.states[j]['id'])
+                {
                   state = stateTable.states[j];
                 }
               }
@@ -185,19 +206,24 @@ $(document).ready(function(){
     });
   }
 
-  function SelectPersonList(id) {
+  function SelectPersonList(id)
+  {
     var list = document.getElementById('peopleList').childNodes;
-    for (var i = 0; i < list.length; i++) {
-      if(list[i].id == id) {
+    for (var i = 0; i < list.length; i++)
+    {
+      if(list[i].id == id)
+      {
         list[i].setAttribute("class","list-group-item list-group-item-action list-group-item-info active");
       }
-      else {
+      else
+      {
         list[i].setAttribute("class","list-group-item list-group-item-action list-group-item-info");
       }
     }
   }
 
-  function LoadStates() {
+  function LoadStates()
+  {
     $.ajax({
       type: "GET",
       url: "/api/states",
@@ -207,7 +233,8 @@ $(document).ready(function(){
         //build the list from the result and insert it into the correct element
 
         stateTable = JSON.parse(result);
-        for(var i = 0; i < stateTable.states.length; i++) {
+        for(var i = 0; i < stateTable.states.length; i++)
+        {
           htmlString += "<option value=" + stateTable.states[i]['id'] + ">" + stateTable.states[i]['state_name'] + " (" + stateTable.states[i]['state_abbreviation'] + ")</option>";
         }
 

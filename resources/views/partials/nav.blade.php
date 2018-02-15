@@ -36,15 +36,15 @@
         <form>
           <div class="form-group">
             <label for="firstName" class="col-form-label">First Name:</label>
-            <input type="text" class="form-control" id="personModalFN">
+            <input type="text" class="form-control" id="personModalFN" required>
           </div>
           <div class="form-group">
             <label for="lastName" class="col-form-label">Last Name:</label>
-            <input type="text" class="form-control" id="personModalLN">
+            <input type="text" class="form-control" id="personModalLN" required>
           </div>
           <div class="form-group">
             <label for="favoriteFood" class="col-form-label">Favorite Food:</label>
-            <input type="text" class="form-control" id="personModalFF">
+            <input type="text" class="form-control" id="personModalFF" required>
           </div>
         </form>
       </div>

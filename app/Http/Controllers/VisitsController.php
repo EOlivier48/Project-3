@@ -38,12 +38,19 @@ class VisitsController extends Controller
     public function store(Request $request)
     {
       $data = $request->json()->all();
-        Visit::create([
-          'person_id' => $data['person_id'],
-          'state_id' => $data['state_id'],
-          'date_visited' => $data['date_visited']
-        ]);
-        return response("Success",200);
+        if ((array_key_exists('person_id',$data) && isset($data['person_id'])) && (array_key_exists('state_id',$data) && isset($data['state_id'])) && (array_key_exists('date_visited',$data) && isset($data['date_visited'])))
+        {
+          Visit::create([
+            'person_id' => $data['person_id'],
+            'state_id' => $data['state_id'],
+            'date_visited' => $data['date_visited']
+          ]);
+          return response("Success",200);
+        }
+        else 
+        {
+            return response("Bad Request",400);
+        }
     }
 
     /**

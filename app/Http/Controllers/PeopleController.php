@@ -37,12 +37,19 @@ class PeopleController extends Controller
     public function store(Request $request)
     {
       $data = $request->json()->all();
+      if ((array_key_exists('first_name',$data) && isset($data['first_name'])) && (array_key_exists('last_name',$data) && isset($data['last_name'])) && (array_key_exists('favorite_food',$data) && isset($data['favorite_food'])))
+      {
         People::create([
-          'first_name' => $data['first_name'],
+          'first_name' => isset($data['first_name']),
           'last_name' => $data['last_name'],
           'favorite_food' => $data['favorite_food']
         ]);
         return response("Success",200);
+      }
+      else
+      {
+          return response("Bad Request",400);
+      }
     }
 
     /**
